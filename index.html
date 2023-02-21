@@ -1,136 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Crisis New Zealand</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<style>
+
+.fixed-view {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  color: white;
+}
+
+.gradient {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-animation-duration: 16s;
+          animation-duration: 16s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+}
+
+.gradient--1 {
+  opacity: 1;
+  background: radial-gradient(ellipse at 100% 100%, #e0ccd2 0%, #ffffff00 65%), radial-gradient(circle at 100% -69%, #fa920f 40%, #c56698 50%, #ffffff00 70%), #2237af;
+}
+
+.gradient--2 {
+  background: radial-gradient(ellipse at 20% 130%, #e0ccd2 0%, #ffffff00 85%), radial-gradient(circle at 140% 30%, #fa920f 10%, #c56698 30%, #ffffff00 60%), #2237af;
+  -webkit-animation-name: gradient;
+          animation-name: gradient;
+}
+
+.noise {
+  position: fixed;
+  pointer-events: none;
+  -webkit-animation: noise 1.2s steps(3) both infinite;
+          animation: noise 1.2s steps(3) both infinite;
+  will-change: auto;
+  width: 200%;
+  height: 200%;
+  left: -50%;
+  top: -50%;
+  z-index: 99999;
+  background-image: url(data:image/png;base64,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);
+}
+
+@-webkit-keyframes noise {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  10% {
+    transform: translate3d(-5%, -5%, 0);
+  }
+  20% {
+    transform: translate3d(-10%, 5%, 0);
+  }
+  30% {
+    transform: translate3d(5%, -10%, 0);
+  }
+  40% {
+    transform: translate3d(-5%, 15%, 0);
+  }
+  50% {
+    transform: translate3d(-10%, 5%, 0);
+  }
+  60% {
+    transform: translate3d(15%, 0, 0);
+  }
+  70% {
+    transform: translate3d(10%, 0, 0);
+  }
+  80% {
+    transform: translate3d(-15%, 0, 0);
+  }
+  90% {
+    transform: translate3d(10%, 5%, 0);
+  }
+  100% {
+    transform: translate3d(15%, 8%, 0);
+  }
+}
+
+@keyframes noise {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  10% {
+    transform: translate3d(-5%, -5%, 0);
+  }
+  20% {
+    transform: translate3d(-10%, 5%, 0);
+  }
+  30% {
+    transform: translate3d(5%, -10%, 0);
+  }
+  40% {
+    transform: translate3d(-5%, 15%, 0);
+  }
+  50% {
+    transform: translate3d(-10%, 5%, 0);
+  }
+  60% {
+    transform: translate3d(15%, 0, 0);
+  }
+  70% {
+    transform: translate3d(10%, 0, 0);
+  }
+  80% {
+    transform: translate3d(-15%, 0, 0);
+  }
+  90% {
+    transform: translate3d(10%, 5%, 0);
+  }
+  100% {
+    transform: translate3d(15%, 8%, 0);
+  }
+}
+
+</style>
+
+</head>
 <body>
-    <!--Main Navigation-->
-    <header>
-      <style>
-        #intro {
-          background-image: url("https://coolwallpapers.me/picsup/6036733-texture-black-dot-texture-black-wallpaper-dots.jpg");
-          height: 100vh;
-        }
+<!-- partial:index.partial.html -->
+<div class="fixed-view">
+  <div class="content">
+    <h1>Crisis New Zealand</h1>
+  </div>
   
-        /* Height for devices larger than 576px */
-        @media (min-width: 992px) {
-          #intro {
-            margin-top: -58.59px;
-          }
-        }
+  <div class="gradient gradient--1"></div>
+  <div class="gradient gradient--2"></div>
+  <div class="noise"></div>
+</div>
+<!-- partial -->
   
-        body {
-          background-color: rgb(8, 8, 8);
-        }
-  
-        .card-body {
-          background-color: #0e0e0e;
-        }
-  
-        .navbar .nav-link {
-          color: #fff !important;
-        }
-      </style>
-  
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-dark d-none d-lg-block" style="z-index: 2000;">
-        <div class="container-fluid">
-          <!-- Navbar brand -->
-          <a class="navbar-brand nav-link" target="_blank" href="https://mdbootstrap.com/docs/standard/">
-            <strong>MDB</strong>
-          </a>
-          <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarExample01"
-            aria-controls="navbarExample01" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="fas fa-bars"></i>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarExample01">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item active">
-                <a class="nav-link" aria-current="page" href="#intro">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="https://www.youtube.com/channel/UC5CF7mLQZhvx8O5GODZAhdA" rel="nofollow"
-                  target="_blank">Learn Bootstrap 5</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="https://mdbootstrap.com/docs/standard/" target="_blank">Download MDB UI KIT</a>
-              </li>
-  
-            </ul>
-  
-            <ul class="navbar-nav d-flex flex-row">
-              <!-- Icons -->
-              <li class="nav-item">
-                <a class="nav-link text-danger fw-bold" href="https://mdbootstrap.com/bf/waiting-list"
-                  target="_blank">Join MDB Black November Waiting List</a>
-              </li>
-              <li class="nav-item me-3 me-lg-0">
-                <a class="nav-link" href="https://www.youtube.com/channel/UC5CF7mLQZhvx8O5GODZAhdA" rel="nofollow"
-                  target="_blank">
-                  <i class="fab fa-youtube"></i>
-                </a>
-              </li>
-              <li class="nav-item me-3 me-lg-0">
-                <a class="nav-link" href="https://www.facebook.com/mdbootstrap" rel="nofollow" target="_blank">
-                  <i class="fab fa-facebook-f"></i>
-                </a>
-              </li>
-              <li class="nav-item me-3 me-lg-0">
-                <a class="nav-link" href="https://twitter.com/MDBootstrap" rel="nofollow" target="_blank">
-                  <i class="fab fa-twitter"></i>
-                </a>
-              </li>
-              <li class="nav-item me-3 me-lg-0">
-                <a class="nav-link" href="https://github.com/mdbootstrap/mdb-ui-kit" rel="nofollow" target="_blank">
-                  <i class="fab fa-github"></i>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <!-- Navbar -->
-  
-      <!-- Background image -->
-      <div id="intro" class="bg-image shadow-2-strong">
-        <div class="mask" style="background-color: rgba(0, 0, 0, 0.61);">
-          <div class="container d-flex align-items-center justify-content-center text-center h-100">
-            <div class="text-white">
-              <h1 class="display-1 fw-bold mb-0">BLACK FRIDAY</h1>
-              <h2 class="display-5 mb-4 fw-normal"> SALE</h2>
-              <a class="btn btn-danger btn-lg m-2" href="#offers" role="button">SEE OFFERS</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Background image -->
-    </header>
-  
-    <!--Footer-->
-    <footer class="text-lg-start">
-  
-      <hr class="m-0" />
-  
-      <div class="text-center py-4 align-items-center text-white">
-        <p>Follow MDB on social media</p>
-        <a href="https://www.youtube.com/channel/UC5CF7mLQZhvx8O5GODZAhdA" class="btn btn-danger m-1" role="button"
-          rel="nofollow" target="_blank">
-          <i class="fab fa-youtube"></i>
-        </a>
-        <a href="https://www.facebook.com/mdbootstrap" class="btn btn-danger m-1" role="button" rel="nofollow"
-          target="_blank">
-          <i class="fab fa-facebook-f"></i>
-        </a>
-        <a href="https://twitter.com/MDBootstrap" class="btn btn-danger m-1" role="button" rel="nofollow" target="_blank">
-          <i class="fab fa-twitter"></i>
-        </a>
-        <a href="https://github.com/mdbootstrap/mdb-ui-kit" class="btn btn-danger m-1" role="button" rel="nofollow"
-          target="_blank">
-          <i class="fab fa-github"></i>
-        </a>
-      </div>
-  
-      <!-- Copyright -->
-      <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-        © 2020 Copyright:
-        <a class="text-white" href="https://mdbootstrap.com/">MDBootstrap.com</a>
-      </div>
-      <!-- Copyright -->
-    </footer>
-    <!--Footer-->
-  </body>
+</body>
+</html>
